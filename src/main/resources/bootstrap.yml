@@ -1,0 +1,32 @@
+server:
+  port: 8098    #default port where the service will be started
+ 
+eureka:         #tells about the Eureka server details and its refresh time
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/
+    healthcheck:
+      enabled: true
+    lease:
+      duration: 5
+ 
+spring:     
+  application:
+    name: config-server   #current service name to be used by the eureka server
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/configServer
+    username: configServer
+    password: configServer
+  profiles:
+    active:
+    - jdbc
+  cloud:
+    config:
+      server:
+        jdbc:
+          sql: SELECT PROPERTIES.KEY, PROPERTIES.VALUE from PROPERTIES where APPLICATION=? and PROFILE=? and LABEL=?
+          order: 1
